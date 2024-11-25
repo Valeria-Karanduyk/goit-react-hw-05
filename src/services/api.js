@@ -51,4 +51,5 @@ const creditsMovie = async (movieId) => {
   const response = await axios(`movie/${movieId}/credits`, options);
   return response.data;
 };
+
 export { searchMovie, trendingMovie, detailsMovie, reviewsMovie, creditsMovie };

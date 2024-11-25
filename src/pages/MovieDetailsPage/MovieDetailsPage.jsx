@@ -2,50 +2,99 @@ import s from "./MovieDetailsPage.module.css";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { detailsMovie } from "../../services/api";
 import { Suspense, useEffect, useState } from "react";
+import Loader from "../../components/Loader/Loader";
+import Error from "../../components/Error/Error";
 const MovieDetailsPage = () => {
   const location = useLocation();
   const goBack = location.state ?? "/movies";
-  console.log(location);
   const { movieId } = useParams();
   const [item, setItem] = useState(null);
+  const [error, setError] = useState(null);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     (async () => {
       try {
+        setLoader(true);
+        setError(null);
         const data = await detailsMovie(movieId);
         setItem(data);
       } catch (error) {
-        console.log(error);
+        setError(error);
+      } finally {
+        setLoader(false);
       }
     })();
   }, [movieId]);
+
   return (
-    item && (
-      <>
-        <div>
-          <Link to={goBack}>go back</Link>
+    <>
+      {loader && <Loader />}
+      {item && (
+        <div className={s.box}>
+          <div className={s.head}>
+            <Link to={goBack} className={s.btn}>
+              <MdOutlineKeyboardArrowLeft className={s.icon} />
+              Go back
+            </Link>
+            <p>{item.title}</p>
+          </div>
           <img
-            src={`https://image.tmdb.org/t/p/w500${item.backdrop_path}`}
-            alt=""
+            className={s.img}
+            src={
+              item.backdrop_path
+                ? `https://image.tmdb.org/t/p/original${item.backdrop_path}`
+                : placeholder
+            }
+            alt={item.title}
           />
-          <p>{item.title}</p>
-          <ul>
-            <li>
-              <Link to="reviews" state={location.state}>
-                Reviews
-              </Link>
-            </li>
-            <li>
-              <Link to="cast" state={location.state}>
-                Cast
-              </Link>
-            </li>
-          </ul>
+          <p className={s.text}>{item.overview}</p>
+          <div className={s.detailsBox}>
+            <Link to="reviews" className={s.btn} state={location.state}>
+              <MdReviews className={s.icon} /> Reviews
+            </Link>
+            <Link to="cast" className={s.btn} state={location.state}>
+              <MdRecentActors className={s.icon} />
+              Cast
+            </Link>
+            {item.homepage && (
+              <a
+                href={`${item.homepage}`}
+                className={s.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MdHome className={s.icon} />
+                Home Page
+              </a>
+            )}
+            {item.release_date && (
+              <p className={s.info}>
+                <MdNewReleases className={s.icon} />
+                Release date:&nbsp;<span>{item.release_date}</span>
+              </p>
+            )}
+            {item.popularity && (
+              <p className={s.info}>
+                <MdGrade className={s.icon} />
+                Popularity:&nbsp;<span>{item.popularity}</span>
+              </p>
+            )}
+          </div>
         </div>
-        <Suspense fallback={<div>Loading...</div>}>
+      )}
+      {item && (
+        <Suspense fallback={<Loader />}>
           <Outlet />
         </Suspense>
-      </>
-    )
+      )}
+      {error && (
+        <Error
+          status={error.response?.status}
+          message={error.response?.data?.status_message}
+        />
+      )}
+    </>
   );
 };
+
 export default MovieDetailsPage;
