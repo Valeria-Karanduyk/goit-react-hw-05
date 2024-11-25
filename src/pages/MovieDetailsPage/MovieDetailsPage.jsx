@@ -4,6 +4,14 @@ import { detailsMovie } from "../../services/api";
 import { Suspense, useEffect, useState } from "react";
 import Loader from "../../components/Loader/Loader";
 import Error from "../../components/Error/Error";
+import {
+  MdReviews,
+  MdRecentActors,
+  MdHome,
+  MdOutlineKeyboardArrowLeft,
+  MdNewReleases,
+  MdGrade,
+} from "react-icons/md";
 const MovieDetailsPage = () => {
   const location = useLocation();
   const goBack = location.state ?? "/movies";
@@ -40,11 +48,7 @@ const MovieDetailsPage = () => {
           </div>
           <img
             className={s.img}
-            src={
-              item.backdrop_path
-                ? `https://image.tmdb.org/t/p/original${item.backdrop_path}`
-                : placeholder
-            }
+            src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
             alt={item.title}
           />
           <p className={s.text}>{item.overview}</p>

@@ -1,6 +1,6 @@
-import s from "./Buttons.module.css";
+import s from "./Button.module.css";
 
-const Buttons = ({ handlePage, movieList }) => {
+const Button = ({ handlePage, movieList }) => {
   return (
     <div className={s.box}>
       <button
@@ -26,4 +26,4 @@ const Buttons = ({ handlePage, movieList }) => {
   );
 };
 
-export default Buttons;
+export default Button;
