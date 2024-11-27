@@ -1,49 +1,69 @@
+import { useState, useEffect } from "react";
 import s from "./MovieDetailsPage.module.css";
-import { useParams } from "react-router-dom";
+import {
+  useParams,
+  Outlet,
+  useLocation,
+  useNavigate,
+  Link,
+} from "react-router-dom";
 import { fetchMovieDetails } from "../../services/api";
-import { useEffect, useState } from "react";
-import Loader from "../../components/Loader/Loader";
-import Error from "../../components/Error/Error";
-// import {
-//   MdReviews,
-//   MdRecentActors,
-//   MdHome,
-//   MdOutlineKeyboardArrowLeft,
-//   MdNewReleases,
-//   MdGrade,
-// } from "react-icons/md";
-const MovieDetailsPage = () => {
-  const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [error, setError] = useState(null);
-  const [loader, setLoader] = useState(false);
-  useEffect(() => {
-    const fetchDetails = async () => {
-      setLoader(true);
-      setError(null);
-      try {
-        const data = await fetchMovieDetails(movieId);
-        setMovie(data);
-      } catch (err) {
-        setError("Failed to fetch movie details.");
-      } finally {
-        setLoader(false);
-      }
-    };
 
-    fetchDetails();
+const MovieDetailsPage = () => {
+  const [movie, setMovie] = useState(null);
+  const { movieId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const goBack = location.state?.from ?? "/movies";
+
+  const { poster, title, releaseYear, userScore, overview, genres } =
+    movie ?? {};
+
+  useEffect(() => {
+    fetchMovieDetails(movieId).then(setMovie);
   }, [movieId]);
 
-  if (loader) return <Loader />;
-  if (error) return <Error message={error} />;
+  const backToMovies = () => {
+    navigate(goBack);
+  };
 
   return (
     <div>
+      <button className={s.btn} type="button" onClick={backToMovies}>
+        Back to movies
+      </button>
       {movie && (
-        <>
-          <h1>{movie.title}</h1>
-          <p>{movie.overview}</p>
-        </>
+        <div>
+          <div className={s.container}>
+            <img className={s.img} src={poster} alt={title} />
+            <div className={s.info}>
+              <h3 className={s.title}>
+                {title} ({releaseYear})
+              </h3>
+              <p>User Score: {userScore}%</p>
+              <h3>Overview</h3>
+              <p>{overview}</p>
+              <h3>Genres</h3>
+              <p>{genres.map(({ name }) => name).join(" ")}</p>
+            </div>
+          </div>
+
+          <p className={s.description}>Additional information</p>
+
+          <ul className={s.list}>
+            <li>
+              <Link to={"cast"} state={{ from: location?.state?.from }}>
+                Cast
+              </Link>
+            </li>
+            <li>
+              <Link to={"reviews"} state={{ from: location?.state?.from }}>
+                Reviews
+              </Link>
+            </li>
+          </ul>
+          <Outlet />
+        </div>
       )}
     </div>
   );

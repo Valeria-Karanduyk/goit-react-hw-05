@@ -1,7 +1,11 @@
-import Error from "../../components/Error/Error";
+import { Link } from "react-router-dom";
 
 const NotFoundPage = () => {
-  return <Error status={"404"} message={"Oops! Page not Found..."} />;
+  return (
+    <>
+      <h2>Oops... nothing found...</h2>
+      <Link to="/">Back to home</Link>
+    </>
+  );
 };
-
 export default NotFoundPage;

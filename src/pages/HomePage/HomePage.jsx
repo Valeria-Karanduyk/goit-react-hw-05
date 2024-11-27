@@ -1,38 +1,32 @@
-import s from "./HomePage.module.css";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { fetchTrendingMovies } from "../../services/api";
-import { useEffect, useState } from "react";
-import MovieList from "../../components/MovieList/MovieList";
-import Error from "../../components/Error/Error";
-import Loader from "../../components/Loader/Loader";
+import s from "./HomePage.module.css";
 
 const HomePage = () => {
-  const [movies, setMovies] = useState(null);
-  const [error, setError] = useState(null);
-  const [loader, setLoader] = useState(false);
-
+  const [movies, setMovies] = useState([]);
+  const location = useLocation();
   useEffect(() => {
-    const fetchMovies = async () => {
-      setLoader(true);
-      setError(null);
-      try {
-        const data = await fetchTrendingMovies();
-        setMovies(data);
-      } catch (error) {
-        setError("Failed to fetch trending movies.");
-      } finally {
-        setLoader(false);
-      }
-    };
-
-    fetchMovies();
+    fetchTrendingMovies().then(setMovies);
   }, []);
 
   return (
-    <div>
-      <h1>Trending Movies</h1>
-      {loader && <Loader />}
-      {error && <Error message={error} />}
-      {!loader && !error && <MovieList movies={movies} />}
+    <div className={s.box}>
+      <h2 className={s.title}>Trending today</h2>
+      {movies.length > 0 && (
+        <ul className={s.list}>
+          {movies.map(({ id, title, poster }) => (
+            <li className={s.item} key={id}>
+              <Link to={`/movies/${id}`} state={{ from: location }}>
+                <img className={s.img} src={poster} alt={title} />
+                <div className={s.container}>
+                  <h3>{title}</h3>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

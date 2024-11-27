@@ -7,16 +7,16 @@ const MovieList = ({ movies }) => {
   }
 
   return (
-    <ul>
+    <ul className={s.list}>
       {movies.map(({ id, title, poster_path }) => (
-        <li key={id}>
+        <li className={s.item} key={id}>
           <Link to={`/movies/${id}`}>
             <img
               src={`${IMAGE_BASE_URL}${poster_path}`}
               alt={title}
               width="100"
             />
-            <p>{title}</p>
+            <p className={s.title}>{title}</p>
           </Link>
         </li>
       ))}

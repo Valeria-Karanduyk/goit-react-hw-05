@@ -1,45 +1,62 @@
-import s from "./MoviePage.module.css";
-import { useState } from "react";
-import MovieList from "../../components/MovieList/MovieList";
+import { useState, useEffect } from "react";
+import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { searchMovies } from "../../services/api";
-import Error from "../../components/Error/Error";
-import Loader from "../../components/Loader/Loader";
+import s from "./MoviePage.module.css";
 
 const MoviePage = () => {
-  const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState("");
-  const [error, setError] = useState(null);
-  const [loader, setLoader] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams("");
+  const location = useLocation();
 
-  const handleSearch = async (e) => {
+  const searchQuery = searchParams.get("query");
+
+  useEffect(() => {
+    searchQuery && searchMovies(searchQuery).then(setMovies);
+  }, [searchQuery]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoader(true);
-    setError(null);
-    try {
-      const data = await searchMovies(query);
-      setMovies(data);
-    } catch (error) {
-      setError("Failed to fetch movies.");
-    } finally {
-      setLoader(false);
-    }
+
+    const response = await searchMovies(query);
+    setMovies(response);
+    setSearchParams({ query });
+    setQuery("");
+  };
+  const onChange = (e) => {
+    setQuery(e.target.value);
   };
 
   return (
-    <div>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search movies..."
-        />
-        <button type="submit">Search</button>
-      </form>
-      {loader && <Loader />}
-      {error && <Error message={error} />}
-      {!loader && !error && <MovieList movies={movies} />}
-    </div>
+    <>
+      <div className={s.box}>
+        <form className={s.form} onSubmit={handleSubmit}>
+          <input
+            className={s.input}
+            type="text"
+            value={query}
+            onChange={onChange}
+          />
+          <button className={s.btn} type="submit">
+            search
+          </button>
+        </form>
+      </div>
+      {movies.length > 0 && (
+        <ul className={s.list}>
+          {movies.map(({ id, title, poster }) => (
+            <li className={s.item} key={id}>
+              <Link to={`/movies/${id}`} state={{ from: location }}>
+                <img className={s.img} src={poster} alt={title} />
+                <div className={s.container}>
+                  <h3>{title}</h3>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
 
