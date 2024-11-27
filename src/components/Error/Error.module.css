@@ -7,9 +7,6 @@
 
     & p {
         font-size: x-large;
-    }
-
-    & p:first-child {
         font-weight: 700;
     }
 }

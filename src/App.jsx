@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navigation from "./components/Navigation/Navigation";
 import Loader from "./components/Loader/Loader";
@@ -14,7 +14,7 @@ const MovieReviews = lazy(() =>
 );
 const MovieCast = lazy(() => import("./components/MovieCast/MovieCast"));
 
-export const App = () => {
+function App() {
   return (
     <>
       <Suspense fallback={<Loader />}>
@@ -31,6 +31,6 @@ export const App = () => {
       </Suspense>
     </>
   );
-};
+}
 
 export default App;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { reviewsMovie } from "../../services/api";
+import { fetchMovieReviews } from "../../services/api";
 import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
 import s from "./MovieReviews.module.css";
@@ -13,19 +13,25 @@ const MovieReview = () => {
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const fetchReviews = async () => {
+      setLoader(true);
+      setError(null);
       try {
-        setLoader(true);
-        setError(null);
-        const data = await reviewsMovie(movieId);
+        const data = await fetchMovieReviews(movieId);
         setReviews(data);
       } catch (error) {
-        setError(error);
+        setError("Failed to fetch movie reviews.");
       } finally {
         setLoader(false);
       }
-    })();
+    };
+
+    fetchReviews();
   }, [movieId]);
+
+  if (loader) return <Loader />;
+  if (error) return <Error message={error} />;
+
   return (
     <>
       {loader && <Loader />}

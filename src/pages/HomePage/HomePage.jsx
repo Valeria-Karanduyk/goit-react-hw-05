@@ -1,42 +1,39 @@
 import s from "./HomePage.module.css";
-import { trendingMovie } from "../../services/api";
+import { fetchTrendingMovies } from "../../services/api";
 import { useEffect, useState } from "react";
 import MovieList from "../../components/MovieList/MovieList";
 import Error from "../../components/Error/Error";
 import Loader from "../../components/Loader/Loader";
 
 const HomePage = () => {
-  const [list, setList] = useState(null);
+  const [movies, setMovies] = useState(null);
   const [error, setError] = useState(null);
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const fetchMovies = async () => {
+      setLoader(true);
+      setError(null);
       try {
-        setLoader(true);
-        setError(null);
-        const data = await trendingMovie();
-        setList(data);
+        const data = await fetchTrendingMovies();
+        setMovies(data);
       } catch (error) {
-        setError(error);
+        setError("Failed to fetch trending movies.");
       } finally {
         setLoader(false);
       }
-    })();
+    };
+
+    fetchMovies();
   }, []);
+
   return (
-    <>
-      {list && !error && <h2 className={s.title}>Top 20 Trending movies</h2>}
-      {!list && !error && <div className={s.empty}></div>}
-      {list && !error && <MovieList list={list.results} />}
+    <div>
+      <h1>Trending Movies</h1>
       {loader && <Loader />}
-      {error && (
-        <Error
-          status={error.response?.status}
-          message={error.response?.data?.status_message}
-        />
-      )}
-    </>
+      {error && <Error message={error} />}
+      {!loader && !error && <MovieList movies={movies} />}
+    </div>
   );
 };
 
