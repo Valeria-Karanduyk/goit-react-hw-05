@@ -16,8 +16,8 @@ const MovieList = ({ list }) => {
             >
               <img
                 src={
-                  movie.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  movie.photo
+                    ? `https://image.tmdb.org/t/p/w500${movie.photo}`
                     : "default-image-path.jpg"
                 }
                 alt={`${movie.title} poster`}

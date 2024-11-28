@@ -37,9 +37,9 @@ const MovieDetailsPage = () => {
           <div className={s.container}>
             <img className={s.img} src={poster} alt={title} />
             <div className={s.info}>
-              <h3 className={s.title}>
+              <h2 className={s.title}>
                 {title} ({releaseYear})
-              </h3>
+              </h2>
               <p>User Score: {userScore}%</p>
               <h3>Overview</h3>
               <p>{overview}</p>
@@ -48,16 +48,24 @@ const MovieDetailsPage = () => {
             </div>
           </div>
 
-          <p className={s.description}>Additional information</p>
+          <h2 className={s.addInfo}>Additional information</h2>
 
           <ul className={s.list}>
             <li>
-              <Link to={"cast"} state={{ from: location?.state?.from }}>
+              <Link
+                className={s.link}
+                to={"cast"}
+                state={{ from: location?.state?.from }}
+              >
                 Cast
               </Link>
             </li>
             <li>
-              <Link to={"reviews"} state={{ from: location?.state?.from }}>
+              <Link
+                className={s.link}
+                to={"reviews"}
+                state={{ from: location?.state?.from }}
+              >
                 Reviews
               </Link>
             </li>

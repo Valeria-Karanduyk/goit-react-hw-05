@@ -1,4 +1,4 @@
-/* .list {
+.list {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -13,4 +13,4 @@
     height: 480px;
     border: 1px solid black;
     overflow: hidden;
-} */
+}

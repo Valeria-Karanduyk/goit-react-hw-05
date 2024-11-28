@@ -52,7 +52,11 @@ const MoviePage = () => {
         <ul className={s.list}>
           {movies.map(({ id, title, poster }) => (
             <li className={s.item} key={id}>
-              <Link to={`/movies/${id}`} state={{ from: location }}>
+              <Link
+                className={s.link}
+                to={`/movies/${id}`}
+                state={{ from: location }}
+              >
                 <img className={s.img} src={poster} alt={title} />
                 <div className={s.container}>
                   <h3>{title}</h3>

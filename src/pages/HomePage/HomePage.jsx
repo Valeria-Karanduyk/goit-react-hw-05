@@ -12,12 +12,16 @@ const HomePage = () => {
 
   return (
     <div className={s.box}>
-      <h2 className={s.title}>Trending today</h2>
+      <h1 className={s.title}>Trending today</h1>
       {movies.length > 0 && (
         <ul className={s.list}>
           {movies.map(({ id, title, poster }) => (
             <li className={s.item} key={id}>
-              <Link to={`/movies/${id}`} state={{ from: location }}>
+              <Link
+                className={s.link}
+                to={`/movies/${id}`}
+                state={{ from: location }}
+              >
                 <img className={s.img} src={poster} alt={title} />
                 <div className={s.container}>
                   <h3>{title}</h3>
