@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { searchMovies } from "../../services/api";
 import s from "./MoviePage.module.css";
+import { MdSearch } from "react-icons/md";
 
 const MoviePage = () => {
   const [query, setQuery] = useState("");
@@ -43,8 +44,8 @@ const MoviePage = () => {
             value={query}
             onChange={onChange}
           />
-          <button className={s.btn} type="submit">
-            Search
+          <button type="submit">
+            <MdSearch className={s.btn} />
           </button>
         </form>
       </div>
