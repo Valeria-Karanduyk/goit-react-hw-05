@@ -30,7 +30,7 @@ const MovieDetailsPage = () => {
   return (
     <div>
       <button className={s.btn} type="button" onClick={backToMovies}>
-        Back to movies
+        Go Back
       </button>
       {movie && (
         <div>
