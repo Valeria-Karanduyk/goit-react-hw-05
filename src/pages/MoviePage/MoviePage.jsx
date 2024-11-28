@@ -12,15 +12,21 @@ const MoviePage = () => {
   const searchQuery = searchParams.get("query");
 
   useEffect(() => {
-    searchQuery && searchMovies(searchQuery).then(setMovies);
+    console.log("Current search query:", searchQuery);
+    if (searchQuery) {
+      searchMovies(searchQuery).then(setMovies);
+    }
   }, [searchQuery]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const response = await searchMovies(query);
-    setMovies(response);
-    setSearchParams({ query });
+    try {
+      const response = await searchMovies(query);
+      setMovies(response);
+      setSearchParams({ query });
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
     setQuery("");
   };
   const onChange = (e) => {
@@ -38,7 +44,7 @@ const MoviePage = () => {
             onChange={onChange}
           />
           <button className={s.btn} type="submit">
-            search
+            Search
           </button>
         </form>
       </div>
